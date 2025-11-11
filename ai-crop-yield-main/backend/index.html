@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Crop Yield Predictor</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="nav-logo">🌱 CropPredictor</div>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#form-section">Predict</a></li>
+    <li><a href="#history-section">History</a></li>
+    <li><a href="#chart-section">Chart</a></li>
+  </ul>
+  <button id="themeToggle" class="theme-btn">Toggle Dark/Light</button>
+</nav>
+
+<!-- Hero Section -->
+<section id="hero" class="hero animated-section">
+  <div class="hero-content">
+    <h1>Welcome to AI Crop Yield Predictor</h1>
+    <p>Predict your crop yield easily and get smart farming suggestions!</p>
+    <a href="#form-section" class="cta-btn">Get Started</a>
+  </div>
+
+  <!-- Floating Icons -->
+  <div class="floating-icons">
+    <img src="assets/icons/crop.png" class="icon crop" alt="Crop">
+    <img src="assets/icons/water.png" class="icon water" alt="Water">
+    <img src="assets/icons/soil.png" class="icon soil" alt="Soil">
+    <img src="assets/icons/sun.png" class="icon sun" alt="Sun">
+    <img src="assets/icons/fertilizer.png" class="icon fertilizer" alt="Fertilizer">
+  </div>
+</section>
+
+
+
+<!-- Prediction Form -->
+<section id="form-section" class="form-section">
+  <div class="container">
+    <form id="yieldForm">
+      <label for="crop">Crop Type: <span title="Select the type of crop.">ℹ️</span></label>
+      <select id="crop" required>
+        <option value="">-- Select Crop --</option>
+        <option value="Wheat">Wheat</option>
+        <option value="Rice">Rice</option>
+        <option value="Corn">Corn</option>
+        <option value="Soybean">Soybean</option>
+        <option value="Cotton">Cotton</option>
+      </select>
+
+      <label for="soil">Soil Type: <span title="Select the soil type.">ℹ️</span></label>
+      <select id="soil" required>
+        <option value="">-- Select Soil --</option>
+        <option value="Loamy">Loamy</option>
+        <option value="Clay">Clay</option>
+        <option value="Sandy">Sandy</option>
+        <option value="Black">Black</option>
+      </select>
+
+      <label for="area">Land Area (acres): <span title="Enter land area in acres.">ℹ️</span></label>
+      <input type="number" id="area" min="1" required placeholder="Ex: 5">
+
+      <label for="rain">Rainfall (mm): <span title="Enter rainfall in mm.">ℹ️</span></label>
+      <input type="number" id="rain" min="1" required placeholder="Ex: 80">
+
+      <div class="buttons">
+        <button type="submit" class="submit-btn">Predict Yield</button>
+        <button type="button" id="resetBtn" class="reset-btn">Reset</button>
+      </div>
+    </form>
+
+    <div id="loader" class="loader" style="display:none;"></div>
+    <div id="result"></div>
+    <div id="yieldGauge"></div>
+  </div>
+</section>
+
+<!-- History Table -->
+<section id="history-section" class="history-section">
+  <div class="container">
+    <h2>📜 Prediction History</h2>
+    <table id="historyTable">
+      <thead>
+        <tr>
+          <th>Crop</th>
+          <th>Soil</th>
+          <th>Area</th>
+          <th>Rainfall</th>
+          <th>Yield</th>
+          <th>Category</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Yield Chart -->
+<section id="chart-section" class="chart-section">
+  <div class="container">
+    <h2>📊 Yield Chart</h2>
+    <canvas id="yieldChart"></canvas>
+  </div>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "agri-tech-df7bf",
+  "private_key_id": "cd4fdb7d7f2ad8183f9036372cf3a0e813bcb8ce",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCwEg2TfakicEHP\nRtGhZl3INTqt02VOVpZ+r7BuBePP/s0Uwvye2SdvZAByhLZhJtqvoStbOG9DWvi2\nHHhgjSYnSdrRRzgLXaI42aQTkRZ9/nFcnpb2LTdnVcQ85x8KuFkewqXaXXjYh/Za\n/BL6xs7vSb1MwHM+d+yH6045gMw5VKHMri2A56Bda3vT4eHko4KmDdb5e/2rWWRD\n6Fbo7rJQ+FbnOIJmQaAIz0ti8T+noV1jqTVE82Np4ntKWl2dmxveqS/gjLp+U091\nnNqRyHDVxHvAUbdm8GYt1WnHJgd3di0X2A2lK917ybHwnoXZ85y8dhZ6KY+pRTGr\nm2OKSDX3AgMBAAECggEARVG2Op08m6xqnHqbSdoNjic2xPz3Y5I/if0NjyOOf3Mn\ntsbVwoxoNDjA3FVXoIQ1kPP5J97eHzyPstMeqZSosssm9UH+1Kq2lX9KU9HJcy1b\n4EUn1iATMgHYUsoDtKrDm5KyzXgDfex5l3Sq3EStcBQuDSuvs6ZvX0vK7mTBAsih\n9saqN/bANg839pDDRWFbQjwAKJQP0nXt4pYT537jYyNFhbd0Om8m5bABy1HGH7m+\ncvrT97GmshFUBXM8zT9QEG49oAqv0In//5ApSmBP7BUVzSmVOsppQIiWljLXZPvn\niE/09oJELD5n9rWXZsBF6I+siOKQ8b2nHQq9dkvpUQKBgQDaKr+n9xA1CJJY8aFp\nHO9mzo0wEdhx34Ai6FXMXFdabahAu0d7nURI+EBKcheYoD2o1pI1q01cDW9lDPPq\n2Iq7AmonbH9/ZQ1GPWOnZoeFBM+Ayg0Sj+2djm5xeKBaLFZ6tbSwAe627En8hlMq\nbDdFwJy3QiyYpow45Q6PCBTo1QKBgQDOmnv0p8aM9T+MRjxTfi1s064b/sEWxkFZ\nuGZ7453X26B8UNcw38aog3uVBOV2/i71sJ3idwF2oEEZtGiWwsz6IiviMUFwuSx4\n7C6OKmJp9PuMtZ/XI6ZVLyE1jjmpKvHadwS8FnUaMWpa5faGgV00MKMCi1v6FVRq\nq4FGt5DJmwKBgBIvlBBVSPWSxFhDtBfGALLKLvy90BQV9GF0iophfCqej3Lt6ZSF\nVIbcosdR4WOon9suH7v3jphIymta/A4shMv39I9avPoKm2OqhF8U7eEJuJ5cuWA9\nvSnwEIbG7l716TOLaAdv8c0vvy8cp1wW7ziSSL4B9yO2ZmPrvB3yJ4QNAoGBAJs7\nFXGAcb1NM58Y0pDFGCpRbdsY8UlEUquv0ki5f8pE+XMOZnERYbkReVRBJovedbgi\nKK6UTeQsil1e4MqNuOcjr6c27P1eFF0Sz/P/QoxsBmj1uhAyd/I/BAuyPf6uBqPn\nkwYjNX8lq8x6Rl1Pa5EgDgqGXOgtCI1RKUPR/paLAoGAQdTP/z7utdeCt6I8vXTG\nAQcyJ+wOEi0cJfOYtTp4/OEmRtwW9EeqwQgiNtxr23UFU+8uruAJa252mz9IeIOO\nrtoXLDpRPl8y6787PLR/sQWnoKqTn8JE1SaW2Yi4pWg7z5CM248a/y+BTQC6B8Cs\noi2rDk8MxXD5YOj4PNe8w1A=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@agri-tech-df7bf.iam.gserviceaccount.com",
+  "client_id": "105334813071048144833",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40agri-tech-df7bf.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

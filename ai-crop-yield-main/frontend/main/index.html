@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Crop Yield Predictor</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/main/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a href="#"><img src="/main/icons/logo.jpg" alt="" id="logo"></a>
+    <a class="navbar-brand text-white" href="#">YieldPredictor</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link text-white" href="#hero">Home</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="#form-section">Predict</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="#history-section">History</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="#chart-section">Charts</a></li>
+       <li class="nav-item"><a class="nav-link text-white" href="/main/advance_farming.html" target="_blank">Advanced Farming</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="/main/weather.html" target="_blank">Weather</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="../productspage/product.html" target="_blank">Products</a></li>
+      </ul>
+      <button id="themeToggle" class="btn btn-outline-success">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<section id="hero" class="hero py-5 bg-light text-center">
+  <div class="container">
+    <h1 class="display-5">Welcome to AI Crop Yield Predictor</h1>
+    <p class="lead">Predict your crop yield easily and get smart farming suggestions!</p>
+    <a href="#form-section" class="btn btn-primary btn-lg">Get Started</a>
+  </div>
+</section>
+
+<section id="form-section" class="form-section py-5">
+  <div class="container">
+    <h3 class="mb-4">🌾 Crop Yield Prediction Form</h3>
+    <form id="yieldForm" class="row g-3">
+      <div class="col-md-12">
+        <label for="crop" class="form-label">Crop Type:</label>
+        <select id="crop" class="form-select" required>
+          <option value="">-- Select Crop --</option>
+          <option value="Wheat">Wheat</option>
+          <option value="Rice">Rice</option>
+          <option value="Corn">Corn</option>
+          <option value="Soybean">Soybean</option>
+          <option value="Cotton">Cotton</option>
+        </select>
+      </div>
+      <div class="col-md-12">
+        <label for="soil" class="form-label">Soil Type:</label>
+        <select id="soil" class="form-select" required>
+          <option value="">-- Select Soil --</option>
+          <option value="Loamy">Loamy</option>
+          <option value="Clay">Clay</option>
+          <option value="Sandy">Sandy</option>
+          <option value="Black">Black</option>
+        </select>
+      </div>
+      <div class="col-md-12">
+        <label for="area" class="form-label">Land Area (acres):</label>
+        <input type="number" id="area" class="form-control" min="1" required placeholder="Ex: 5">
+      </div>
+      <div class="col-md-12">
+        <label for="rainfall" class="form-label">Rainfall (mm):</label>
+        <input type="number" id="rainfall" class="form-control" min="1" required placeholder="Ex: 80">
+      </div>
+      <div class="col-12 d-flex gap-2">
+        <button type="submit" class="btn btn-success" id="submit-btn">Predict Yield</button>
+        <button type="button" id="resetBtn" class="btn btn-secondary">Reset</button>
+      </div>
+    </form>
+    <div id="loader" class="loader mt-3" style="display:none;"></div>
+    <div id="result" class="mt-3"></div>
+    <div id="yieldGauge" class="mt-3"></div>
+  </div>
+</section>
+
+<section id="soilTracker">
+  <h3>Soil Health Tracker</h3>
+  <form id="soilForm">
+    <label for="ph">Soil pH:</label>
+    <input type="number" id="ph" step="0.1" min="3" max="10" required>
+
+    <label for="nitrogen">Nitrogen (N) %:</label>
+    <input type="number" id="nitrogen" step="0.1" min="0" max="5" required>
+
+    <label for="phosphorus">Phosphorus (P) %:</label>
+    <input type="number" id="phosphorus" step="0.1" min="0" max="5" required>
+
+    <label for="potassium">Potassium (K) %:</label>
+    <input type="number" id="potassium" step="0.1" min="0" max="5" required>
+
+    <button type="submit">Save Soil Data</button>
+  </form>
+  <div id="soilResult"></div>
+</section>
+
+<section id="fertilizerSchedule">
+  <h3>Fertilizer & Irrigation Schedule</h3>
+  <button id="downloadSchedule" class="btn btn-primary mb-3">Download Schedule</button>
+  <table id="scheduleTable">
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>Task</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<section id="pestAdvisory" class="py-5">
+  <h3>🌿 Pest & Disease Advisory</h3>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label for="pestCrop" class="form-label">Select Crop:</label>
+      <select id="pestCrop" class="form-select">
+        <option value="">-- Select Crop --</option>
+        <option value="Wheat">Wheat</option>
+        <option value="Rice">Rice</option>
+        <option value="Corn">Corn</option>
+        <option value="Soybean">Soybean</option>
+        <option value="Cotton">Cotton</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label for="pestSoil" class="form-label">Select Soil:</label>
+      <select id="pestSoil" class="form-select">
+        <option value="">-- Select Soil --</option>
+        <option value="Loamy">Loamy</option>
+        <option value="Clay">Clay</option>
+        <option value="Sandy">Sandy</option>
+        <option value="Black">Black</option>
+      </select>
+    </div>
+  </div>
+  <button id="checkPests" class="btn btn-success mt-3">Check Advisory</button>
+  <div id="pestResult" class="mt-3"></div>
+</section>
+
+
+
+<section id="history-section" class="history-section py-5 bg-light">
+  <div class="container">
+    <h2 class="mb-3">📜 Prediction History</h2>
+    <div class="d-flex gap-2 mb-3">
+      <input type="text" id="historyFilter" class="form-control" placeholder="Search by crop or soil...">
+      <button id="clearHistoryBtn" class="btn btn-danger">Clear History</button>
+    </div>
+    <div class="table-responsive">
+      <table id="historyTable" class="table table-striped table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>Crop</th>
+            <th>Soil</th>
+            <th>Area</th>
+            <th>Rainfall</th>
+            <th>Yield</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="chart-section" class="chart-section py-5">
+  <div class="container">
+    <h2 class="mb-4">📊 Yield Charts</h2>
+    <div class="mb-3 d-flex gap-2">
+      <button id="downloadBarChart" class="btn btn-primary">Download Bar Chart</button>
+      <button id="downloadPieChart" class="btn btn-primary">Download Pie Chart</button>
+    </div>
+    <canvas id="yieldChart" class="mb-4"></canvas>
+    <canvas id="pieChart"></canvas>
+  </div>
+</section>
+
+<div id="chatIcon">💬</div>
+<div id="chatWindow">
+  <div id="chatHeader">🌱 AI Farming Assistant <span id="closeChat">✖</span></div>
+  <div class="p-2">
+    <label for="chatLang">Language:</label>
+    <select id="chatLang" class="form-select">
+      <option value="English">English</option>
+      <option value="Hindi">हिंदी</option>
+      <option value="Telugu">తెలుగు</option>
+      <option value="Tamil">தமிழ்</option>
+    </select>
+  </div>
+  <div id="chatBox" class="p-2"></div>
+  <div class="chat-input p-2 d-flex gap-2">
+    <input type="text" id="chatMessage" class="form-control" placeholder="Ask about crops, soil, farming..." />
+    <button id="micBtn" class="btn btn-outline-secondary">🎤</button>
+    <button id="sendBtn" class="btn btn-primary">Send</button>
+  </div>
+</div>
+
+<script src="/main/app.js"></script>
+<script src="/main/chat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App Pro</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --background-color: #f5f6fa;
+}
+body { background-color: var(--background-color); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+.app-container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+.weather-header { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.search-box { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+.search-input { border: 2px solid #eee; border-radius: 25px; padding: 0.75rem 1.5rem; transition: all 0.3s ease; }
+.search-input:focus { border-color: var(--secondary-color); box-shadow: 0 0 0 0.2rem rgba(52,152,219,0.25); }
+.search-button { border-radius: 25px; padding: 0.75rem 2rem; background: var(--secondary-color); border: none; color: white; font-weight: bold; transition: all 0.3s ease; }
+.search-button:hover { background: var(--primary-color); transform: translateY(-2px); }
+.weather-card { background: white; border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.weather-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.info-box { background: var(--background-color); padding: 1rem; border-radius: 10px; text-align: center; }
+.info-box i { font-size: 2rem; color: var(--secondary-color); margin-bottom: 0.5rem; }
+.chart-container { background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.location-icon { color: var(--accent-color); margin-right: 0.5rem; }
+.loading-spinner { display: none; text-align: center; padding: 2rem; }
+.error-message { background: #fff3f3; color: var(--accent-color); padding: 1rem; border-radius: 10px; margin-bottom: 1rem; display: none; }
+@media (max-width: 768px) { .weather-info { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="app-container">
+    <div class="weather-header text-center mb-4">
+        <h1 class="mb-0"><i class="fas fa-cloud-sun"></i> Weather App Pro</h1>
+        <p class="mb-0 mt-2">Your Professional Weather Forecast</p>
+    </div>
+
+    <div class="search-box">
+        <form id="weatherForm" class="d-flex flex-wrap gap-2">
+            <input type="text" id="cityInput" class="form-control search-input flex-grow-1" placeholder="Enter city name (e.g., London)" required>
+            <button type="button" id="micBtn" class="btn btn-secondary"><i class="fas fa-microphone"></i></button>
+            <button type="submit" class="btn search-button">Get Weather</button>
+            <a href="index.html" class="btn btn-danger text-white">Home</a>
+        </form>
+    </div>
+
+    <div id="errorMessage" class="error-message"><i class="fas fa-exclamation-circle"></i> <span id="errorText"></span></div>
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+    </div>
+
+    <div id="weatherContent" style="display:none;">
+        <div class="weather-card">
+            <h2 class="mb-4"><i class="fas fa-location-dot location-icon"></i> <span id="cityName">City Name</span></h2>
+            <div class="weather-info">
+                <div class="info-box"><i class="fas fa-temperature-high"></i><h4>Temperature</h4><p id="temperature" class="mb-0">--°C</p></div>
+                <div class="info-box"><i class="fas fa-wind"></i><h4>Wind Speed</h4><p id="windSpeed" class="mb-0">-- m/s</p></div>
+                <div class="info-box"><i class="fas fa-tint"></i><h4>Humidity</h4><p id="humidity" class="mb-0">--%</p></div>
+                <div class="info-box"><i class="fas fa-cloud"></i><h4>Conditions</h4><p id="conditions" class="mb-0">--</p></div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="mb-4">5-Day Temperature Forecast</h3>
+            <canvas id="weatherChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+const API_KEY = "1752dbc916afb327692b62e68dfeb617";
+const BASE_URL = "https://api.openweathermap.org/data/2.5";
+
+const weatherForm = document.getElementById("weatherForm");
+const cityInput = document.getElementById("cityInput");
+const micBtn = document.getElementById("micBtn");
+const errorMessage = document.getElementById("errorMessage");
+const errorText = document.getElementById("errorText");
+const loadingSpinner = document.getElementById("loadingSpinner");
+const weatherContent = document.getElementById("weatherContent");
+const cityName = document.getElementById("cityName");
+const temperature = document.getElementById("temperature");
+const windSpeed = document.getElementById("windSpeed");
+const humidity = document.getElementById("humidity");
+const conditions = document.getElementById("conditions");
+
+const weatherChart = new Chart(document.getElementById("weatherChart"), {
+    type: "line",
+    data: { labels: [], datasets: [{ label: "Temperature (°C)", data: [], borderColor: "#3498db", backgroundColor: "rgba(52,152,219,0.1)", fill:true, tension:0.4, borderWidth:2, pointRadius:4, pointBackgroundColor:"#fff", pointBorderColor:"#3498db", pointHoverRadius:6 }] },
+    options: { responsive:true, plugins:{ title:{ display:false }, legend:{ position:'top' } }, scales:{ y:{ beginAtZero:false, grid:{ color:"rgba(0,0,0,0.1)" } }, x:{ grid:{ display:false } } } }
+});
+
+function showError(msg){ errorText.textContent=msg; errorMessage.style.display="block"; setTimeout(()=>{ errorMessage.style.display="none"; },5000); }
+function showLoading(show){ loadingSpinner.style.display = show?"block":"none"; weatherContent.style.display = show?"none":"block"; }
+
+async function fetchWeatherData(city){
+    try{
+        const currentRes = await fetch(`${BASE_URL}/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`);
+        if(!currentRes.ok) throw new Error(currentRes.status===404?"City not found":"Error fetching data");
+        const currentData = await currentRes.json();
+        const forecastRes = await fetch(`${BASE_URL}/forecast?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`);
+        if(!forecastRes.ok) throw new Error("Error fetching forecast data");
+        const forecastData = await forecastRes.json();
+        return { current:currentData, forecast:forecastData };
+    } catch(e){ showError(e.message); return null; }
+}
+
+function updateWeatherInfo(data){
+    const cur = data.current;
+    cityName.textContent = `${cur.name}, ${cur.sys.country}`;
+    temperature.textContent = `${cur.main.temp.toFixed(1)}°C`;
+    windSpeed.textContent = `${cur.wind.speed.toFixed(1)} m/s`;
+    humidity.textContent = `${cur.main.humidity}%`;
+    conditions.textContent = cur.weather[0].description
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~0-9]/g,"")  // remove punctuation & numbers
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+function updateChart(data){
+    const forecast = data.forecast.list;
+    const labels = forecast.map(e=>new Date(e.dt*1000).toLocaleString([], { weekday:'short', hour:'2-digit', minute:'2-digit' }));
+    const temps = forecast.map(e=>e.main.temp);
+    weatherChart.data.labels = labels;
+    weatherChart.data.datasets[0].data = temps;
+    weatherChart.update();
+}
+
+weatherForm.addEventListener("submit", async e=>{
+    e.preventDefault();
+    const city = cityInput.value.trim();
+    if(!city){ showError("Please enter a city name"); return; }
+    showLoading(true);
+    const data = await fetchWeatherData(city);
+    if(data){ updateWeatherInfo(data); updateChart(data); weatherContent.style.display="block"; }
+    showLoading(false);
+});
+
+// Voice input
+if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    micBtn.addEventListener("click", ()=>{
+        recognition.start();
+    });
+
+    recognition.addEventListener("result", e=>{
+        let transcript = e.results[0][0].transcript;
+        transcript = transcript.replace(/[^a-zA-Z\s-]/g,"").trim(); // remove numbers, punctuation, cm, etc
+        cityInput.value = transcript;
+        weatherForm.requestSubmit(); // automatically submit
+    });
+
+    recognition.addEventListener("speechend", ()=>{ recognition.stop(); });
+    recognition.addEventListener("error", e=>{ showError("Voice recognition error: " + e.error); });
+}else{
+    micBtn.disabled = true;
+    micBtn.title = "Your browser does not support voice input";
+}
+</script>
+</body>
+</html>
